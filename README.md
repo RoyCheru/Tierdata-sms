@@ -1,4 +1,16 @@
 # TierData SMS
+
+## Live Demo
+
+This repository also contains a **frontend-only demo** of TierData SMS that is ready to deploy to Vercel.
+
+- Enter any email address on the sign-in screen and click **Sign in to Demo**.
+- No OTP, Go backend, PostgreSQL database, or SMS provider is required.
+- The dashboard, customers, groups, campaigns, messages, schedules, reports, provider settings and audit log are populated with realistic sample data.
+- Writes such as creating a campaign, adding a customer, scheduling a send or approving a campaign update the local demo data. Everything is stored in the browser's `localStorage`.
+
+The original platform described below is the production system this interface was built for. The demo simulates its API so the frontend can be explored as a standalone portfolio project.
+
 ## Application Screenshots
 
 ### Homepage

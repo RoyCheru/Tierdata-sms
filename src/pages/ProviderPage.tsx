@@ -325,9 +325,8 @@ export function ProviderPage() {
           <div>
             <CardTitle>Email (SMTP)</CardTitle>
             <CardDescription>
-              Outgoing email for login codes, invitations, approvals and email
-              campaigns. A saved configuration takes precedence over SMTP
-              settings in the environment.
+              Outgoing email for invitations, approvals and email campaigns. In this
+              demo the connection is simulated, so any valid-looking settings work.
             </CardDescription>
           </div>
           <Badge tone={emailData?.active ? "green" : "gray"}>

@@ -1,11 +1,6 @@
-import type { Envelope, Pagination } from "@/types/api";
+import type { Pagination } from "@/types/api";
 import { ApiError } from "@/types/api";
-
-// In dev, Vite proxies /api-backend -> http://localhost:8080 (the Go API has
-// no CORS middleware configured, so a direct cross-origin call would fail).
-// In production set VITE_API_BASE_URL to the API's own origin (still requires
-// the backend to add CORS, or to be served behind the same reverse proxy).
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api-backend";
+import { demoPaginated, demoRawRequest, demoRequest } from "@/mock/handler";
 
 const SESSION_STORAGE_KEY = "centum.sessionId";
 
@@ -51,55 +46,18 @@ export interface RequestOptions {
   raw?: boolean; // when true, resolves to the fetch Response instead of parsing envelope (e.g. CSV export)
 }
 
-function buildUrl(path: string, query?: RequestOptions["query"]): string {
-  const url = new URL(BASE_URL + path, window.location.origin);
-  if (query) {
-    for (const [key, value] of Object.entries(query)) {
-      if (value === undefined || value === null || value === "") continue;
-      url.searchParams.set(key, String(value));
-    }
-  }
-  return url.pathname + url.search;
-}
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = "GET", body, query } = options;
-  const headers: Record<string, string> = {};
-  const sessionId = getSessionId();
-  if (sessionId) headers.Authorization = `Bearer ${sessionId}`;
-
-  let payload: BodyInit | undefined;
-  if (body instanceof FormData) {
-    payload = body;
-  } else if (body !== undefined) {
-    headers["Content-Type"] = "application/json";
-    payload = JSON.stringify(body);
-  }
-
-  const response = await fetch(buildUrl(path, query), {
-    method,
-    headers,
-    body: payload,
-  });
-
-  if (options.raw) {
-    if (!response.ok) {
-      throw new ApiError(response.status, `Request failed with status ${response.status}`);
+  const { method = "GET", body, query, raw } = options;
+  try {
+    if (raw) {
+      return (await demoRawRequest(path, method, query)) as unknown as T;
     }
-    return response as unknown as T;
+    return await demoRequest<T>(path, method, body, query);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 401 && onUnauthorized) onUnauthorized();
+    throw err;
   }
-
-  const envelope = (await response.json()) as Envelope<T>;
-
-  if (response.status === 401 && onUnauthorized) {
-    onUnauthorized();
-  }
-
-  if (!response.ok) {
-    throw new ApiError(envelope.status ?? response.status, envelope.message ?? "Request failed");
-  }
-
-  return envelope.data;
 }
 
 export async function requestPaginated<T>(
@@ -107,22 +65,12 @@ export async function requestPaginated<T>(
   options: RequestOptions = {},
 ): Promise<{ data: T; pagination: Pagination | null }> {
   const { method = "GET", query } = options;
-  const headers: Record<string, string> = {};
-  const sessionId = getSessionId();
-  if (sessionId) headers.Authorization = `Bearer ${sessionId}`;
-
-  const response = await fetch(buildUrl(path, query), { method, headers });
-  const envelope = (await response.json()) as Envelope<T>;
-
-  if (response.status === 401 && onUnauthorized) {
-    onUnauthorized();
+  try {
+    return await demoPaginated<T>(path, method, query);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 401 && onUnauthorized) onUnauthorized();
+    throw err;
   }
-
-  if (!response.ok) {
-    throw new ApiError(envelope.status ?? response.status, envelope.message ?? "Request failed");
-  }
-
-  return { data: envelope.data, pagination: envelope.pagination };
 }
 
 export const http = {

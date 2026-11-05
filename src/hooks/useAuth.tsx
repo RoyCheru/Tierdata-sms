@@ -1,13 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { authApi, type OtpRequestResult } from "@/api/auth";
+import { authApi } from "@/api/auth";
 import { getSessionId, setSessionExpiresIn, setSessionId, setUnauthorizedHandler } from "@/lib/http";
 import type { CurrentUser } from "@/types/entities";
 
 interface AuthContextValue {
   user: CurrentUser | null;
   initializing: boolean;
-  requestOtp: (identifier: string) => Promise<OtpRequestResult>;
-  verifyOtp: (identifier: string, code: string) => Promise<void>;
+  signInDemo: (identifier: string) => Promise<void>;
   extendSession: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -44,10 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setInitializing(false));
   }, [clearSession]);
 
-  const requestOtp = useCallback((identifier: string) => authApi.requestOtp(identifier), []);
-
-  const verifyOtp = useCallback(async (identifier: string, code: string) => {
-    const session = await authApi.verifyOtp(identifier, code);
+  const signInDemo = useCallback(async (identifier: string) => {
+    const session = await authApi.demoLogin(identifier);
     setSessionId(session.sessionId);
     setSessionExpiresIn(session.expiresInSeconds);
     const currentUser = await authApi.session();
@@ -69,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [clearSession]);
 
   return (
-    <AuthContext.Provider value={{ user, initializing, requestOtp, verifyOtp, extendSession, logout }}>
+    <AuthContext.Provider value={{ user, initializing, signInDemo, extendSession, logout }}>
       {children}
     </AuthContext.Provider>
   );

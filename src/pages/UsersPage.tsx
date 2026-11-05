@@ -133,7 +133,7 @@ export function UsersPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Users"
-        description="Team members who can access this system, with OTP-only login."
+        description="Team members who can access this demo workspace."
         action={
           <Button onClick={() => setFormOpen(true)}>
             <Plus className="size-4" />
@@ -158,7 +158,7 @@ export function UsersPage() {
           } else if (created.email) {
             toast.error("User created, but the invitation email couldn't be sent. Use the envelope button to resend it.");
           } else {
-            toast.success("User created. With no email on file, no invitation was sent - they can sign in with a one-time code by phone.");
+            toast.success("User created. They can use the demo sign-in with any email address.");
           }
           refetch();
         }}
@@ -171,7 +171,7 @@ export function UsersPage() {
         loading={deactivateState.loading}
         tone="danger"
         title="Deactivate this user?"
-        description={`${deactivating?.email || deactivating?.phone || "This user"} will immediately lose access and won't be able to request new login codes.`}
+        description={`${deactivating?.email || deactivating?.phone || "This user"} will be marked inactive in the demo workspace.`}
         confirmLabel="Deactivate user"
       />
     </div>
@@ -212,7 +212,7 @@ function UserFormModal({
       open={open}
       onClose={onClose}
       title="New user"
-      description="Login is OTP-only. If you add an email, the user is sent an invitation to sign in."
+      description="Add a team member to the demo directory. Sign-in is shared in demo mode."
       footer={
         <>
           <Button variant="secondary" onClick={onClose}>
