@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Brand - derived from the TierData logo blue (#0052AC). */
+  --color-brand-50: #ebf4fb;
+  --color-brand-100: #d6e7f9;
+  --color-brand-200: #b3d1f3;
+  --color-brand-300: #8fbaec;
+  --color-brand-400: #6ba4e6;
+  --color-brand-500: #3679cb;
+  --color-brand-600: #0052ac;
+  --color-brand-700: #004692;
+  --color-brand-800: #003978;
+  --color-brand-900: #002d5f;
+
+  /* Neutral surface scale - white page background + Tailwind "slate" grays */
+  --color-surface-app: #ffffff;
+  --color-surface-canvas: #ffffff;
+  --color-surface-card: #ffffff;
+  --color-surface-sunken: #f1f5f9;
+  --color-surface-hover: #f8fafc;
+
+  --color-border-subtle: #f1f5f9;
+  --color-border-default: #e2e8f0;
+
+  --color-ink-900: #0f172a;
+  --color-ink-700: #334155;
+  --color-ink-500: #64748b;
+  --color-ink-400: #94a3b8;
+  --color-ink-300: #cbd5e1;
+
+  /* Status */
+  --color-status-purple-bg: #f1edfb;
+  --color-status-purple-text: #6d4fd3;
+  --color-status-green-bg: #e6f7ee;
+  --color-status-green-text: #1c9a5b;
+  --color-status-blue-bg: #e8f1fd;
+  --color-status-blue-text: #2f6fd1;
+  --color-status-red-bg: #fdeced;
+  --color-status-red-text: #d13f4c;
+  --color-status-amber-bg: #fdf3e2;
+  --color-status-amber-text: #b3781b;
+  --color-status-gray-bg: #f1f5f9;
+  --color-status-gray-text: #475569;
+
+  /* Gentle entrance for content that changes in place (e.g. login steps). */
+  --animate-fade-up: fade-up 0.35s ease-out both;
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-surface-app);
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-default);
+  border-radius: 999px;
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-enter {
+  animation: toast-enter 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-enter {
+    animation: none;
+  }
+}
