@@ -1,5 +1,20 @@
 # TierData SMS
+## Application Screenshots
 
+### Homepage
+![TierData SMS Homepage](screenshots/homepage.png)
+
+### Dashboard
+![TierData SMS Dashboard](screenshots/dashboard.png)
+
+### Customer Management
+![Customer Management](screenshots/customers.png)
+
+### Provider Configuration
+![Provider Configuration](screenshots/provider-configuration.png)
+
+### Reports
+![Campaign Reports](screenshots/reports.png)
 **SMS & Email Campaign Management Platform**
 
 TierData SMS is a messaging and customer communication management platform designed to help organizations manage contacts, organize audiences, create and schedule campaigns, and monitor message delivery.
